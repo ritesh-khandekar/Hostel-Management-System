@@ -50,21 +50,33 @@ exports.findAll = (req, res) => {
 		});
 };
 
-exports.findOne = (req, res) => {
-	const id = req.params.id;
-	Students.findByPk(id)
+exports.login = (req, res) => {
+	Students.findOne({
+		where: {
+			email: req.body.email,
+			password: req.body.password
+		}
+	})
 		.then(data => {
 			if (data) {
+				session = req.session;
+				session.name = req.body.name;
+				session.roll_number = req.body.roll_number;
+				session.hostel_number = req.body.hostel_number;
+				session.room_number = req.body.room_number;
+				session.issue_type = req.body.issue_type;
+				data = {}
+				data["success"] = true;
 				res.send(data);
 			} else {
 				res.status(404).send({
-					message: `Cannot find User with id=${id}.`
+					message: `Cannot find Student with email ${req.body.email}.`
 				});
 			}
 		})
 		.catch(err => {
 			res.status(500).send({
-				message: "Error retrieving User with id=" + id
+				message: "Error retrieving Student with email " + req.body.email
 			});
 		});
 };
