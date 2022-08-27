@@ -1,0 +1,35 @@
+{
+  "name": "hostel-management-portal",
+  "version": "1.0.0",
+  "description": "Website for managing the hostel-related issues",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/ritesh-khandekar/Hackathon-27-08-2022.git"
+  },
+  "keywords": [
+    "Hostel",
+    "Management",
+    "Portal",
+    "Issues"
+  ],
+  "author": "Ritesh Khandekar",
+  "license": "ISC",
+  "dependencies": {
+    "cookie-parser": "^1.4.6",
+    "cors": "^2.8.5",
+    "express": "^4.18.1",
+    "express-session": "^1.17.3",
+    "nodemailer": "^6.7.8",
+    "pg": "^8.7.3",
+    "pg-hstore": "^2.3.4",
+    "sequelize": "^6.21.3"
+  },
+  "bugs": {
+    "url": "https://github.com/ritesh-khandekar/Hackathon-27-08-2022/issues"
+  },
+  "homepage": "https://github.com/ritesh-khandekar/Hackathon-27-08-2022#readme"
+}
