@@ -2,6 +2,6 @@ module.exports = {
     HOST: "localhost",
     USER: "postgres",
     PASSWORD: "root",
-    DB: "mydb",
+    DB: "pg_database",
     dialect: "postgres",
 };
