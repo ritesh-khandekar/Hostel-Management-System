@@ -1,13 +1,13 @@
 body
 {
-  background-color: black;
+  background-color:#E7EAEE;
 }
 .containers
 {
   margin-top: 0.2em;
   padding: 2em;
   border-radius: 10px;
-  background-color: white;
+  background-color: rgb(211, 206, 206);
   margin-bottom: 2em;
 }
 input::-webkit-outer-spin-button,
