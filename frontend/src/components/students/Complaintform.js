@@ -1,43 +1,77 @@
 import React from 'react'
+import { useRef, useState } from "react";
+import { getData, postData } from '../methods/methods'
 import TextArea from './TextArea'
 
 function ComplaintForm() {
-  
+  const [res_json,updateRes] = useState({})
+  getData("students")
+    .then(data => {
+      if (!data.login) {
+        // window.location.href +=  "login"
+      } else {
+        updateRes(data)
+      }
+    });
+
+  const [user] = useState(res_json);
+  const [success, setSuccess] = useState(false);
+  const [error, setError] = useState(null)
+  const form = useRef(null);
+
+  function handleSubmit(e) {
+    e.preventDefault();
+    var formdata = new FormData(form.current);
+    postData("complaints",formdata)
+      .then(json => {
+        // console.log(json)
+        if (json["success"]) {
+          setSuccess(true);
+          setError(null);
+        } else {
+          setError(json["message"]);
+          setSuccess(false);
+        }
+      });
+  }
   return (
     <>
-     <div className="containers">
+      <div className="containers">
         <h1 id="formtitle">Student Complaint</h1>
-        <form className="row g-3">
+        <div className={success ? "" : "d-none"}><div className="alert alert-success">Complaint sent Successfully!</div></div>
+        <div className={error ? "" : "d-none"}><div className="alert alert-danger">{error}</div></div>
+
+        <form className="row g-3" ref={form} onSubmit={handleSubmit}>
           <div className="col-md-12">
             <label htmlFor="inputEmail4" className="form-label">
               Name
             </label>
-            <input type="text" className="form-control" id="name" />
+            <input type="text" className="form-control" name='name' defaultValue={user.name} id="name" />
           </div>
           <div className="col-md-4">
             <label htmlFor="inputPassword4" className="form-label">
               Roll Number
             </label>
-            <input type="number" className="form-control" id="rollno" />
+            <input type="number" className="form-control" name='roll_number' defaultValue={user.roll_number} id="rollno" />
           </div>
           <div className="col-md-4">
             <label htmlFor="inputEmail4" className="form-label">
               Hostel Number
             </label>
-            <input type="text" className="form-control" id="name" />
+            <input type="text" className="form-control" id="name" name='hostel_number' defaultValue={user.hostel_number} />
           </div>
           <div className="col-md-4">
             <label htmlFor="inputPassword4" className="form-label">
               Room Number
             </label>
-            <input type="number" className="form-control" id="inputPassword4" />
+            <input type="number" className="form-control" id="inputPassword4" name='room_number' defaultValue={user.room_number} />
           </div>
           <div className="col-md-12">
             <label htmlFor="inputState" className="form-label">
               Type of Issue
             </label>
-            <select id="inputState" className="form-select">
-              <option selected>Choose...</option>
+            <select id="inputState" className="form-select" name='issue_type' defaultValue={user.issue_type}>
+              <option>Choose...</option>
               <option value={"Electricity"}>Electricity</option>
               <option value={"Water Supply"}>Water Supply</option>
               <option value={"Cleaniness and Hyegine"}>
@@ -50,7 +84,7 @@ function ComplaintForm() {
               <option value={"Other"}>Other </option>
             </select>
             <br />
-            <TextArea />
+            <TextArea user_state={user} />
           </div>
 
           <div className="col-12">

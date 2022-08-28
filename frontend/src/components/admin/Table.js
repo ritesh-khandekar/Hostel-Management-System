@@ -5,7 +5,6 @@ function Table() {
 
   return (
     <>
-
       <div className="container mt-4 table-responsive tables">
         <div className="container"></div>
         <div className='option row frb table-responsive'>

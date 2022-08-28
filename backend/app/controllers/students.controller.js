@@ -53,6 +53,10 @@ exports.create = (req, res) => {
 exports.login_status = (req, res) => {
 	if (checkLogin(req)) {
 		res_json["login"] = true;
+		res_json["name"] = session.name;
+		res_json["roll_number"] = session.roll_number;
+		res_json["hostel_number"] = session.hostel_number;
+		res_json["room_number"] = session.room_number;
 	}
 	res.status(401).send(res_json)
 }

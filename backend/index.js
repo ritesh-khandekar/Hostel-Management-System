@@ -7,8 +7,6 @@ const session = require("express-session");
 
 var corsOptions = {
   origin: "http://localhost:3000",
-  origin: "http://127.0.0.1:5500"
-
 };
 var oneDay = 1000 * 60 * 60 * 24;
 
