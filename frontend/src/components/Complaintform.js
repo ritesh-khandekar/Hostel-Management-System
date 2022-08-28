@@ -3,7 +3,7 @@ import TextArea from './TextArea'
 function ComplaintForm() {
   return (
     <>
-     <div className="container">
+     <div className="containers">
         <h1 id="formtitle">Student Complaint</h1>
         <form className="row g-3">
           <div className="col-md-12">
