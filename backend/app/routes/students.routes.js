@@ -4,6 +4,7 @@ module.exports = app => {
     
     router.post("/", students.create);
     router.get("/", students.login_status);
+    router.post("/login", students.login);
 
     app.use('/students', router);
   };

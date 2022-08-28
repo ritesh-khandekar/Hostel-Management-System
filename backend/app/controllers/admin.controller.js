@@ -1,12 +1,8 @@
 const db = require("../models");
-const sendMail = require("../mailer/sendmail");
-const { checkAdminLogin, getAdminNames } = require("../methods/methods");
+const { checkAdminLogin } = require("../methods/methods");
 const session = require("express-session");
 const Admins = db.admins;
 const Op = db.Sequelize.Op;
-
-
-const ADMINS = [];
 
 var res_json = {
 	"login": false
@@ -99,6 +95,7 @@ exports.filtered = (req, res) => {
 
 	var condition = "";
 	condition["level"] = ADMIN_LEVEL;
+	
 	for (key in data.filters) {
 		if (valid_keys.includes(key)) {
 			condition[key] = { [Op.iLike]: `%${data[key]}%` }
@@ -156,6 +153,12 @@ exports.getAction = (req, res) => {
 			where: {
 				complaint_id: COMPLAINT_ID
 			}
+		}).then(data => {
+			if(!data){
+				res.status(400).send({
+					message: "Failed to Update!"
+				})
+			}
 		})
 	} else {
 		Complaints.update({
@@ -163,6 +166,12 @@ exports.getAction = (req, res) => {
 		}, {
 			where: {
 				complaint_id: COMPLAINT_ID
+			}
+		}).then(data => {
+			if(!data){
+				res.status(400).send({
+					message: "Failed to Update!"
+				})
 			}
 		})
 	}

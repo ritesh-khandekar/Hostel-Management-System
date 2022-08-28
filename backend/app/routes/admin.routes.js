@@ -7,8 +7,6 @@ module.exports = app => {
     router.post("/complaints", admin.filtered);
     router.post("/complaints/modify/:complaint_id/:complaint_status", admin.getAction);
     router.post("/login", admin.login);
-
-    // router.get("/complaints", admin.complaints);
-
+    
     app.use('/admin', router);
   };

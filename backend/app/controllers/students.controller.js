@@ -11,7 +11,7 @@ const res_json = {
 
 exports.create = (req, res) => {
 
-	if (!req.body.email || !req.body.password) {
+	if (!req.body.email || !req.body.password || !req.body.name || !req.body.roll_number || !req.body.hostel_number || !req.room_number) {
 		res.status(400).send({
 			message: "Content can not be empty!"
 		});
@@ -21,28 +21,42 @@ exports.create = (req, res) => {
 	const user = {
 		email: req.body.email,
 		password: req.body.password,
+		name: req.body.name,
+		roll_number: req.body.roll_number,
+		hostel_number: req.body.hostel_number,
+		room_number: req.body.room_number,
 	};
 
 	Students.create(user)
 		.then(data => {
-			sendMail(user.email);
+			// sendMail(user.email);
 			let session = req.session;
-			session.email = user.email;
+			session.student_login = true;
+			session.name = data.name;
+			session.roll_number = data.roll_number;
+			session.hostel_number = data.hostel_number;
+			session.room_number = data.room_number;
+			session.email = data.email;
+			
+			data = {}
+			data["login"] = true
 			res.send(data);
 		})
 		.catch(err => {
 			res.status(500).send({
 				message:
-					err.message || "Some error occurred while creating the User."
+					err.message || "Some error occurred while creating the Student."
 			});
 		});
 };
-exports.login_status = (req,res) => {
-	if(checkLogin(req)){
+
+exports.login_status = (req, res) => {
+	if (checkLogin(req)) {
 		res_json["login"] = true;
 	}
 	res.status(401).send(res_json)
 }
+
 exports.findAll = (req, res) => {
 	const email = req.query.email;
 	var condition = email ? { email: { [Op.iLike]: `%${email}%` } } : null;
@@ -53,7 +67,7 @@ exports.findAll = (req, res) => {
 		.catch(err => {
 			res.status(500).send({
 				message:
-					err.message || "Some error occurred while retrieving tutorials."
+					err.message || "Some error occurred while retrieving Student."
 			});
 		});
 };
@@ -68,11 +82,14 @@ exports.login = (req, res) => {
 		.then(data => {
 			if (data) {
 				session = req.session;
+
 				session.student_login = true;
-				session.name = req.body.name;
-				session.roll_number = req.body.roll_number;
-				session.hostel_number = req.body.hostel_number;
-				session.room_number = req.body.room_number;
+				session.name = data.name;
+				session.roll_number = data.roll_number;
+				session.hostel_number = data.hostel_number;
+				session.room_number = data.room_number;
+				session.email = data.email;
+
 				data = {}
 				data["success"] = true;
 				res.send(data);

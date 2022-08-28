@@ -6,10 +6,16 @@ module.exports = (sequelize, Sequelize) => {
       password: {
         type: Sequelize.STRING
       },
-      fname: {
+      name: {
         type: Sequelize.STRING
       },
-      lname: {
+      roll_number: {
+        type: Sequelize.STRING
+      },
+      hostel_number: {
+        type: Sequelize.STRING
+      },
+      room_number: {
         type: Sequelize.STRING
       }
     });

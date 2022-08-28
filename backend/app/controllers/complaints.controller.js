@@ -1,7 +1,8 @@
 const db = require("../models");
 const sendMail = require("../mailer/sendmail");
-const { checkLogin , getAdminNames } = require("../methods/methods")
+const { checkLogin, getAdminNames } = require("../methods/methods");
 const Complaints = db.complaint;
+const Admins = db.admins;
 const genRanHex = size => [...Array(size)].map(() => Math.floor(Math.random() * 16).toString(16)).join('');
 
 var res_json = {
@@ -10,7 +11,7 @@ var res_json = {
 
 
 exports.create = (req, res) => {
-	if(!checkLogin(req)){
+	if (!checkLogin(req)) {
 		res.status(401).send(res_json);
 		return;
 	}
@@ -25,43 +26,50 @@ exports.create = (req, res) => {
 		}
 		return;
 	}
+	user_session = req.session;
+	Admins.findOne({
+		where: {
+			level: 1
+		}
+	}).then(admin_data => {
+		if (admin_data) {
+			const complaint = {
+				complaint_id: genRanHex(10),
+				name: user_session.name,
+				roll_number: user_session.roll_number,
+				hostel_number: user_session.hostel_number,
+				room_number: user_session.room_number,
+				issue_type: req.body.issue_type,
+				problem: req.body.problem,
+				handler_name: admin_data.name,
+				level: admin_data.level
+			};
 
-	const complaint = {
-		complaint_id: genRanHex(10),
-		name: req.body.name,
-		roll_number: req.body.roll_number,
-		hostel_number: req.body.hostel_number,
-		room_number: req.body.room_number,
-		issue_type: req.body.issue_type,
-		problem: req.body.problem,
-		handler_name: getAdminNames()[0],
-		level: "1"
-	};
-	if (checkLogin(req)) {
-		Complaints.findOne({
-			where: {
-				complaint_id: complaint[complaint_id]
-			}
-		}).then(data => {
-			if (data) {
-				complaint[complaint_id] = genRanHex(10);
-			}
-			Complaints.create(complaint)
-				.then(data => {
-					data = {}
-					data["success"] = true;
-					res.send(data);
-				})
-				.catch(err => {
-					res.status(500).send({
-						message:
-							err.message || "Some error occurred while creating the complaint."
+			Complaints.findOne({
+				where: {
+					complaint_id: complaint[complaint_id]
+				}
+			}).then(data => {
+				if (data) {
+					complaint[complaint_id] = genRanHex(10);
+				}
+				Complaints.create(complaint)
+					.then(data => {
+						data = {}
+						data["success"] = true;
+						res.send(data);
+					})
+					.catch(err => {
+						res.status(500).send({
+							message:
+								err.message || "Some error occurred while creating the complaint."
+						});
 					});
-				});
-		})
-	} else {
-		res.status(401).send(res_json);
-	}
+			})
+		}
+	})
+
+
 };
 
 exports.findAll = (req, res) => {
