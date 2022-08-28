@@ -2,8 +2,8 @@ import icon from "../images/icon_admin.png";
 import { Link } from "react-router-dom";
 
 const navData = [
-    {"data":"DASHBOARD", "link":"/admin"},
-    
+    {"data":"login", "link":"/login"},
+    {"data":"admin", "link":"/admin/login"},
 ]
 
 function NavLinks(props) {
