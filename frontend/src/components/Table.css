@@ -1,0 +1,36 @@
+.tables
+{
+    background-color: rgb(221, 221, 221);
+    font-weight: 300;
+    
+}
+.tables th
+{
+    background-color: rebeccapurple;
+    color: rgb(249, 249, 249);
+}
+.sortmenu
+{
+    display: inline-flex;
+   
+}
+.option
+{
+    display: inline-flex;
+}
+.optioname
+{
+    margin-top: 1em;
+    font-size: 1em;
+}
+.optsel
+{
+    border-radius: 5px;
+    height: 2.3em;
+    
+    margin-top: 1em;
+}
+.searchbar
+{
+    margin-top: 1em;
+}
