@@ -1,21 +1,16 @@
 import "./App.css";
 import React from 'react';
 import { Route, Routes } from "react-router-dom";
-import Table from "./components/Table";
-import NavbarLight from "./components/navbar/NavbarAdminLight";
-import ComplaintForm from "./components/Complaintform";
-
-// import ComplaintForm from "./components/Complaintform";
+import Admin from "./components/admin/Admin";
+import Student from "./components/students/Student";
 
 function App() {
   return (
     <>
-    <NavbarLight />
-    <Routes>
-      <Route path='/admin' element={<Table />} />
-      <Route path='/complaint' element={<ComplaintForm/>} />
-
-    </Routes>
+      <Routes>
+        <Route path='/admin' element={<Admin />} />
+        <Route path='/' element={<Student />} />
+      </Routes>
     </>
   );
 }
