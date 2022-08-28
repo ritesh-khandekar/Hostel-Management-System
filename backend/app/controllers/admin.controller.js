@@ -15,7 +15,16 @@ exports.status = (req, res) => {
 	}
 	res.status(401).send(res_json);
 }
-
+exports.create = (req, res) => {
+	Admins.create({
+			email: req.body.email,
+			password: req.body.password,
+			level: req.body.level,
+			name: req.body.name
+	}).then(data => {
+		res.send(data)
+	})
+}
 exports.login = (req, res) => {
 	Admins.findOne({
 		where: {
