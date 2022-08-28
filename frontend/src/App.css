@@ -1,8 +1,6 @@
 body
 {
-  font-family: 'Inter';
-  font-weight: 300;
-  background-color: rgb(135, 135, 135);
+  background-color: black;
 }
 .containers
 {
@@ -18,7 +16,6 @@ input::-webkit-inner-spin-button {
   margin: 0;
 }
 
-/* Firefox */
 input[type=number] {
   -moz-appearance: textfield;
 }

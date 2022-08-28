@@ -34,6 +34,8 @@ db.sequelize.sync()
 
 // Routes
 require("./app/routes/students.routes")(app);
+require("./app/routes/complaints.routes")(app);
+require("./app/routes/admin.routes")(app)
 
 app.get("/", (req, res) => {
   let session = req.session;

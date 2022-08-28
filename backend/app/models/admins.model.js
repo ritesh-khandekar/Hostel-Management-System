@@ -1,5 +1,5 @@
 module.exports = (sequelize, Sequelize) => {
-    const Students = sequelize.define("students", {
+    const Admins = sequelize.define("admins", {
       email: {
         type: Sequelize.STRING
       },
@@ -9,15 +9,9 @@ module.exports = (sequelize, Sequelize) => {
       name: {
         type: Sequelize.STRING
       },
-      roll_number: {
-        type: Sequelize.STRING
-      },
-      hostel_number: {
-        type: Sequelize.STRING
-      },
-      room_number: {
+      level: {
         type: Sequelize.STRING
       }
     });
-    return Students;
+    return Admins;
   };
