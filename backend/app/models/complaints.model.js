@@ -1,5 +1,8 @@
 module.exports = (sequelize, Sequelize) => {
     const Complaints = sequelize.define("complaints", {
+      complaint_id: {
+        type: Sequelize.STRING
+      },
       name: {
         type: Sequelize.STRING
       },
@@ -14,7 +17,16 @@ module.exports = (sequelize, Sequelize) => {
       },
       issue_type: {
         type: Sequelize.STRING
-      }
+      },
+      level: {
+        type: Sequelize.STRING
+      },
+      handler_name: {
+        type: Sequelize.STRING
+      },
+      status: {
+        type: Sequelize.STRING
+      },
     });
     return Complaints;
   };

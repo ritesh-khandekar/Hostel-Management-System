@@ -1,10 +1,13 @@
 const db = require("../models");
 const sendMail = require("../mailer/sendmail");
 const session = require("express-session");
+const { checkLogin } = require("../methods/methods");
 
 const Students = db.students;
 const Op = db.Sequelize.Op;
-
+const res_json = {
+	"login": false
+}
 
 exports.create = (req, res) => {
 
@@ -34,7 +37,12 @@ exports.create = (req, res) => {
 			});
 		});
 };
-
+exports.login_status = (req,res) => {
+	if(checkLogin(req)){
+		res_json["login"] = true;
+	}
+	res.status(401).send(res_json)
+}
 exports.findAll = (req, res) => {
 	const email = req.query.email;
 	var condition = email ? { email: { [Op.iLike]: `%${email}%` } } : null;
@@ -60,11 +68,11 @@ exports.login = (req, res) => {
 		.then(data => {
 			if (data) {
 				session = req.session;
+				session.student_login = true;
 				session.name = req.body.name;
 				session.roll_number = req.body.roll_number;
 				session.hostel_number = req.body.hostel_number;
 				session.room_number = req.body.room_number;
-				session.issue_type = req.body.issue_type;
 				data = {}
 				data["success"] = true;
 				res.send(data);
