@@ -1,5 +1,5 @@
 import React, { useEffect, useRef, useState } from 'react'
-import { postData } from '../methods/methods';
+import { postData, getData } from '../methods/methods';
 import './Table.css'
 import Tablerow from './Tablerow'
 function Table() {
@@ -21,6 +21,13 @@ function Table() {
   //   add_data["name"] = name;
   //   add_data["val"] = val;
   // }
+  useEffect(()=>{
+    getData("complaints").then(data => {
+      if (typeof data !== "undefined")
+        changeData(data);
+    })
+  },[])
+  
   function handleFiltersSubmit() {
     var formdata = new FormData(form.current);
     var new_data = {
@@ -49,8 +56,9 @@ function Table() {
     }
     // new_data.filters[add_data["nasme"]] = add_data["val"];
     console.log(new_data)
-    postData("complaints", formdata).then(data => {
-      changeData(data);
+    postData("admin/complaints", formdata).then(data => {
+      if (typeof data !== "undefined")
+        changeData(data);
     })
   }
   return (
@@ -112,8 +120,8 @@ function Table() {
             </tr>
           </thead>
           <tbody>
-            {incomingData.map(json => {
-              return <Tablerow date={json.createdAt} cid={json._id} name={json.name} rollno={json.roll_number} top={json.issue_type} />
+            {incomingData.map((json,i) => {
+              return <Tablerow key={i} date={json.createdAt} cid={json._id} name={json.name} rollno={json.roll_number} top={json.issue_type} />
             })}
           </tbody>
         </table>

@@ -5,7 +5,7 @@ module.exports = app => {
     router.get("/", admin.status);
     router.get("/complaints", admin.complaints);
     router.post("/complaints", admin.filtered);
-    router.post("/complaints/modify/:complaint_id/:complaint_status", admin.getAction);
+    router.post("/complaints/modify", admin.getAction);
     router.post("/login", admin.login);
     router.post("/create",admin.create);
 

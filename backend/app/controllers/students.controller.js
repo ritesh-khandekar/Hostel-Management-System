@@ -86,14 +86,13 @@ exports.login = (req, res) => {
 	})
 		.then(data => {
 			if (data) {
-				session = req.session;
-
-				session.student_login = true;
-				session.name = data.name;
-				session.roll_number = data.roll_number;
-				session.hostel_number = data.hostel_number;
-				session.room_number = data.room_number;
-				session.email = data.email;
+				user_session = req.session;
+				user_session.student_login = true;
+				user_session.name = data.name;
+				user_session.roll_number = data.roll_number;
+				user_session.hostel_number = data.hostel_number;
+				user_session.room_number = data.room_number;
+				user_session.email = data.email;
 
 				data = {}
 				data["success"] = true;

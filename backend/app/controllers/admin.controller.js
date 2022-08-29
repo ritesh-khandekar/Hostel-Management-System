@@ -2,6 +2,7 @@ const db = require("../models");
 const { checkAdminLogin } = require("../methods/methods");
 const session = require("express-session");
 const Admins = db.admins;
+const Complaints = db.complaint;
 const Op = db.Sequelize.Op;
 
 var res_json = {
@@ -34,11 +35,11 @@ exports.login = (req, res) => {
 	})
 		.then(data => {
 			if (data) {
-				session = req.session;
-				session.admin_login = true;
-				session.name = data.name;
-				session.email = data.email;
-				session.ADMIN_LEVEL = data.level;
+				user_session = req.session;
+				user_session.admin_login = true;
+				user_session.name = data.name;
+				user_session.email = data.email;
+				user_session.ADMIN_LEVEL = data.level;
 				data = {}
 				data["success"] = true;
 				res.send(data);
@@ -60,9 +61,9 @@ exports.complaints = (req, res) => {
 		res.status(401).send(res_json);
 		return;
 	}
-	ADMIN_LEVEL = req.session.ADMIN_LEVEL;
+	ADMIN_LEVEL = req.session.ADMIN_LEVEL.toString();
 	if (!ADMIN_LEVEL) {
-		ADMIN_LEVEL = 1;
+		ADMIN_LEVEL = "1";
 	}
 	Complaints.findAll({
 		where: {
@@ -95,24 +96,30 @@ exports.filtered = (req, res) => {
 		res.status(401).send(res_json);
 		return;
 	}
-	ADMIN_LEVEL = req.session.ADMIN_LEVEL;
+	ADMIN_LEVEL = req.session.ADMIN_LEVEL.toString();
 	if (!ADMIN_LEVEL) {
-		ADMIN_LEVEL = 1;
+		ADMIN_LEVEL = "1";
 	}
 	const valid_keys = ["complaint_id", "roll_number", "hostel_number", "room_number", "issue_type", "name", "status", "level", "createdAt"];
 	const data = req.body;
-
-	var condition = "";
+	if(req.body==null || req.body == ""){
+		res.status(400).send({
+			message: "Empty Content"
+		});
+		return;
+	}
+	var condition = {};
 	condition["level"] = ADMIN_LEVEL;
 	
 	for (key in data.filters) {
 		if (valid_keys.includes(key)) {
-			if(data[key]=="" || data[key]==null){
+			if(data.filters[key]=="" || data.filters[key]==null){
 				continue;
 			}
-			condition[key] = { [Op.iLike]: `%${data[key]}%` }
+			condition[key] = { [Op.iLike]: `%${data.filters[key]}%` }
 		}
 	}
+	console.log(condition)
 	if (!valid_keys.includes(data.sort.name)) {
 		data.sort.name = "roll_number";
 	}
@@ -132,7 +139,7 @@ exports.filtered = (req, res) => {
 		.catch(err => {
 			res.status(500).send({
 				message:
-					err.message || "Some error occurred while retrieving complaints."
+					 "Some error occurred while retrieving complaints."
 			});
 		});
 };
@@ -148,43 +155,60 @@ exports.getAction = (req, res) => {
 		res.status(401).send(res_json);
 	}
 
-	const COMPLAINT_ID = req.query.complaint_id;
-	const COMPLAINT_STATUS = req.query.complaint_status;
+	console.log(req.query)
+	const COMPLAINT_ID = req.body.complaint_id;
+	const COMPLAINT_STATUS = req.body.complaint_status;
 
 	if (!["ACCEPT", "REJECT", "ESCALATE"].includes(COMPLAINT_STATUS)) {
 		res.status(400).send({
 			message: "Invalid Status"
 		})
 	}
-	if (COMPLAINT_STATUS == "ESCALATE" && ADMIN_LEVEL != 3) {
+	if (COMPLAINT_STATUS == "ESCALATE" && ADMIN_LEVEL != "3") {
 
 		Complaints.update({
-			"level": ADMIN_LEVEL + 1,
+			"level": (parseInt(ADMIN_LEVEL) + 1).toString(),
 			"handler_name": ADMIN_NAME
 		}, {
 			where: {
-				complaint_id: COMPLAINT_ID
+				id: COMPLAINT_ID
 			}
 		}).then(data => {
 			if(!data){
 				res.status(400).send({
 					message: "Failed to Update!"
 				})
+			}else{
+				res.status(201).send({
+					"success":true
+				})
 			}
+		}).catch(err => {
+			res.status(500).send({
+				message: err
+			})
 		})
 	} else {
 		Complaints.update({
 			"status": COMPLAINT_STATUS
 		}, {
 			where: {
-				complaint_id: COMPLAINT_ID
+				id: COMPLAINT_ID
 			}
 		}).then(data => {
 			if(!data){
 				res.status(400).send({
 					message: "Failed to Update!"
 				})
+			}else{
+				res.status(201).send({
+					"success":true
+				})
 			}
-		})
+		}).catch(err => {
+			res.status(500).send({
+				message: err
+			})
+		});
 	}
 }

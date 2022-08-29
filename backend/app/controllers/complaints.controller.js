@@ -29,7 +29,7 @@ exports.create = (req, res) => {
 	user_session = req.session;
 	Admins.findOne({
 		where: {
-			level: 1
+			level: "1"
 		}
 	}).then(admin_data => {
 		if (admin_data) {
@@ -47,11 +47,11 @@ exports.create = (req, res) => {
 
 			Complaints.findOne({
 				where: {
-					complaint_id: complaint[complaint_id]
+					complaint_id: complaint["complaint_id"]
 				}
 			}).then(data => {
 				if (data) {
-					complaint[complaint_id] = genRanHex(10);
+					complaint["complaint_id"] = genRanHex(10);
 				}
 				Complaints.create(complaint)
 					.then(data => {
