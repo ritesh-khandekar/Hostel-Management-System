@@ -11,7 +11,8 @@ const res_json = {
 
 exports.create = (req, res) => {
 
- 	if (!req.body.email || !req.body.password || !req.body.name || !req.body.roll_number || !req.body.hostel_number || !req.room_number) {
+ 	if (!req.body.email || !req.body.password || !req.body.name || !req.body.roll_number || !req.body.hostel_number || !req.body.room_number) {
+		console.log(req.body)
 		res.status(400).send({
 			message: "Content can not be empty!"
 		});
