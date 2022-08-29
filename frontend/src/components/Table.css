@@ -38,7 +38,7 @@
 }
 #pno
 {
-    color: red;
+    color: tomato;
 }
 #sno
 {
@@ -65,6 +65,17 @@
 .frb
 {
     width: 120%;
+    margin-left: 0.02em;
+}
+.outter
+{
+    background-color: rgb(231, 229, 229);
+    padding-top: 0.5em;
+   
+    margin-bottom: 1em;
+    margin-top: 1em;
+    width: 90%;
+    border-radius: 10px;
 }
 td
 {
@@ -77,7 +88,7 @@ td
 {
     background-color: white;
 }
-
+/* 
 ::-webkit-scrollbar {
     width: 12px;
 }
@@ -90,7 +101,7 @@ td
 ::-webkit-scrollbar-thumb {
     border-radius: 10px;
     -webkit-box-shadow: inset 0 0 6px     rgba(0,0,0,0.5); 
-}
+} */
 .option
 {
    display: inline-flex;
@@ -142,4 +153,15 @@ td
 .option-row
 {
     width: 100%;
+}
+.sl
+{
+    width: 100%;
+    margin-left: 0.02em;
+}
+@media (max-width:992px) {
+    .outter
+    {
+       
+    }
 }
