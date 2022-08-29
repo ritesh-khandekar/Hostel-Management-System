@@ -31,13 +31,13 @@ exports.create = (req, res) => {
 	Students.create(user)
 		.then(data => {
 			// sendMail(user.email);
-			let session = req.session;
-			session.student_login = true;
-			session.name = data.name;
-			session.roll_number = data.roll_number;
-			session.hostel_number = data.hostel_number;
-			session.room_number = data.room_number;
-			session.email = data.email;
+			let user_session = req.session;
+			user_session.student_login = true;
+			user_session.name = data.name;
+			user_session.roll_number = data.roll_number;
+			user_session.hostel_number = data.hostel_number;
+			user_session.room_number = data.room_number;
+			user_session.email = data.email;
 			
 			data = {}
 			data["login"] = true
@@ -78,6 +78,11 @@ exports.findAll = (req, res) => {
 };
 
 exports.login = (req, res) => {
+	if(!req.body.email || !req.body.password){
+		res.status(400).send({
+			message: "Please Enter Email ID and Password!"
+		})
+	}
 	Students.findOne({
 		where: {
 			email: req.body.email,
@@ -86,7 +91,8 @@ exports.login = (req, res) => {
 	})
 		.then(data => {
 			if (data) {
-				user_session = req.session;
+				var user_session = req.session;
+
 				user_session.student_login = true;
 				user_session.name = data.name;
 				user_session.roll_number = data.roll_number;
@@ -98,8 +104,8 @@ exports.login = (req, res) => {
 				data["success"] = true;
 				res.send(data);
 			} else {
-				res.status(404).send({
-					message: `Cannot find Student with email ${req.body.email}.`
+				res.status(400).send({
+					message: `Invalid Email ID or Password!`
 				});
 			}
 		})

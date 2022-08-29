@@ -1,18 +1,20 @@
-import React from 'react'
+import React, { useEffect } from 'react'
 import { useRef, useState } from "react";
+import { useNavigate } from 'react-router-dom';
 import { getData, postData } from '../methods/methods'
 import TextArea from './TextArea'
 
 function ComplaintForm() {
   const [res_json,updateRes] = useState({})
-  getData("students")
+  const navigate = useNavigate()
+  useEffect(()=>{getData("students")
     .then(data => {
       if (!data.login) {
-        // window.location.href +=  "login"
+        navigate('/login')
       } else {
         updateRes(data)
       }
-    });
+    });},[])
 
   const [user] = useState(res_json);
   const [success, setSuccess] = useState(false);

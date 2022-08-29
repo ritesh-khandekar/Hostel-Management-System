@@ -21,6 +21,9 @@ module.exports = (sequelize, Sequelize) => {
       level: {
         type: Sequelize.STRING
       },
+      problem: {
+        type: Sequelize.STRING
+      },
       handler_name: {
         type: Sequelize.STRING
       },

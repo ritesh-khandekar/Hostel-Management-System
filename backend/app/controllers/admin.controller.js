@@ -10,23 +10,58 @@ var res_json = {
 }
 
 exports.status = (req, res) => {
+	for(key in req.session){
+		res_json[key] = req.session[key]
+	}
 	if (checkAdminLogin(req)) {
 		res_json["login"] = true;
 		res_json["ADMIN_LEVEL"] = req.session.ADMIN_LEVEL;
 	}
-	res.status(401).send(res_json);
+	Admins.findOne({
+		where: {
+			level: res_json["ADMIN_LEVEL"]
+		}
+	}).then(data => {
+		res_json["solved"] = data.solved;
+		res.status(401).send(res_json);
+	}).catch(err => {
+		res.status(500).send(err)
+	})
+	
 }
 exports.create = (req, res) => {
 	Admins.create({
-			email: req.body.email,
-			password: req.body.password,
-			level: req.body.level,
-			name: req.body.name
+		email: req.body.email,
+		password: req.body.password,
+		level: req.body.level,
+		name: req.body.name
 	}).then(data => {
-		res.send(data)
+		res.status(201).send(data)
+	}).catch(err => {
+		res.status(500).send(err)
 	})
 }
+// exports.adminStatus = (req, res) => {
+// 	if (!req.body.email || !req.body.password) {
+// 		res.status(400).send({
+// 			message: "Please Enter Email ID and Password"
+// 		})
+// 	}
+// 	Admins.findOne({
+// 		where: {
+// 			email: req.session.ADMIN_LEVEL
+// 		}
+// 	}).then(data => {
+// 		res.send()
+// 	})
+// }
+
 exports.login = (req, res) => {
+	if (!req.body.email || !req.body.password) {
+		res.status(400).send({
+			message: "Please Enter Email ID and Password"
+		})
+	}
 	Admins.findOne({
 		where: {
 			email: req.body.email,
@@ -35,7 +70,7 @@ exports.login = (req, res) => {
 	})
 		.then(data => {
 			if (data) {
-				user_session = req.session;
+				var user_session = req.session;
 				user_session.admin_login = true;
 				user_session.name = data.name;
 				user_session.email = data.email;
@@ -44,8 +79,8 @@ exports.login = (req, res) => {
 				data["success"] = true;
 				res.send(data);
 			} else {
-				res.status(404).send({
-					message: `Cannot find Admin with email ${req.body.email}.`
+				res.status(400).send({
+					message: `Wrong Email or Password!`
 				});
 			}
 		})
@@ -57,6 +92,7 @@ exports.login = (req, res) => {
 };
 
 exports.complaints = (req, res) => {
+
 	if (!checkAdminLogin(req)) {
 		res.status(401).send(res_json);
 		return;
@@ -65,13 +101,24 @@ exports.complaints = (req, res) => {
 	if (!ADMIN_LEVEL) {
 		ADMIN_LEVEL = "1";
 	}
+
 	Complaints.findAll({
 		where: {
-			level: ADMIN_LEVEL
+			level: ADMIN_LEVEL,
+			status: [""]
 		}
 	})
 		.then(data => {
-			res.send(data);
+			if(data)
+			{
+				res.status(201).send(data);
+			}
+			else{
+				res.status(500).send({
+					message:
+						err.message || "Some error occurred while retrieving complaints."
+				});
+			}
 		})
 		.catch(err => {
 			res.status(500).send({
@@ -102,7 +149,7 @@ exports.filtered = (req, res) => {
 	}
 	const valid_keys = ["complaint_id", "roll_number", "hostel_number", "room_number", "issue_type", "name", "status", "level", "createdAt"];
 	const data = req.body;
-	if(req.body==null || req.body == ""){
+	if (req.body == null || req.body == "") {
 		res.status(400).send({
 			message: "Empty Content"
 		});
@@ -110,10 +157,10 @@ exports.filtered = (req, res) => {
 	}
 	var condition = {};
 	condition["level"] = ADMIN_LEVEL;
-	
+
 	for (key in data.filters) {
 		if (valid_keys.includes(key)) {
-			if(data.filters[key]=="" || data.filters[key]==null){
+			if (data.filters[key] == "" || data.filters[key] == null) {
 				continue;
 			}
 			condition[key] = { [Op.iLike]: `%${data.filters[key]}%` }
@@ -139,7 +186,7 @@ exports.filtered = (req, res) => {
 		.catch(err => {
 			res.status(500).send({
 				message:
-					 "Some error occurred while retrieving complaints."
+					"Some error occurred while retrieving complaints."
 			});
 		});
 };
@@ -155,7 +202,7 @@ exports.getAction = (req, res) => {
 		res.status(401).send(res_json);
 	}
 
-	console.log(req.query)
+	// console.log(req.query)
 	const COMPLAINT_ID = req.body.complaint_id;
 	const COMPLAINT_STATUS = req.body.complaint_status;
 
@@ -165,30 +212,60 @@ exports.getAction = (req, res) => {
 		})
 	}
 	if (COMPLAINT_STATUS == "ESCALATE" && ADMIN_LEVEL != "3") {
-
-		Complaints.update({
-			"level": (parseInt(ADMIN_LEVEL) + 1).toString(),
-			"handler_name": ADMIN_NAME
-		}, {
+		var NEW_LEVEL = (parseInt(ADMIN_LEVEL) + 1).toString();
+		Admins.findOne({
 			where: {
-				id: COMPLAINT_ID
+				level: NEW_LEVEL
 			}
 		}).then(data => {
-			if(!data){
-				res.status(400).send({
-					message: "Failed to Update!"
+			Complaints.update({
+				"level": NEW_LEVEL ,
+				"handler_name": data.name
+			}, {
+				where: {
+					id: COMPLAINT_ID
+				}
+			}).then(data => {
+				if (!data) {
+					res.status(400).send({
+						message: "Failed to Update!"
+					})
+				} else {
+					res.status(201).send({
+						"success": true
+					})
+				}
+			}).catch(err => {
+				res.status(500).send({
+					message: err
 				})
-			}else{
-				res.status(201).send({
-					"success":true
-				})
-			}
+			})
 		}).catch(err => {
 			res.status(500).send({
 				message: err
 			})
 		})
+		
 	} else {
+		Admins.findOne({
+			where: {
+				level: ADMIN_LEVEL
+			}
+		}).then(data => {
+			Admins.update({
+				solved: data.solved + 1
+			},{
+				where: {
+					level: ADMIN_LEVEL
+				}
+			}).then(data => {
+
+			}).catch(err =>{
+
+			})
+		}).catch(err => {
+
+		});
 		Complaints.update({
 			"status": COMPLAINT_STATUS
 		}, {
@@ -196,13 +273,13 @@ exports.getAction = (req, res) => {
 				id: COMPLAINT_ID
 			}
 		}).then(data => {
-			if(!data){
+			if (!data) {
 				res.status(400).send({
 					message: "Failed to Update!"
 				})
-			}else{
+			} else {
 				res.status(201).send({
-					"success":true
+					"success": true
 				})
 			}
 		}).catch(err => {

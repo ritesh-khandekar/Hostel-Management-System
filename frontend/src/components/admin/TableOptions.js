@@ -11,11 +11,11 @@ function TableOptions(props) {
             <h1 id='tno'>{props.total}</h1>
           </div>
           <div className="stblock col-4 ">
-            <h3>TOTAL COMPLAINTS</h3>
+            <h3>SOLVED COMPLAINTS</h3>
             <h1 id='pno'>{props.pending}</h1>
           </div>
           <div className="stblock col-4">
-            <h3>TOTAL COMPLAINTS</h3>
+            <h3>PENDING COMPLAINTS</h3>
             <h1 id='sno'>{props.solved}</h1>
           </div>
         </div>

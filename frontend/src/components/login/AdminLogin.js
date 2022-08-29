@@ -1,11 +1,10 @@
-import React, { useEffect, useRef, useState } from 'react'
+import React, { useRef, useState, useEffect } from 'react'
 import './Login.css'
 import hostel from './hostel.png';
-import { Link, useNavigate } from 'react-router-dom';
+import { Link , useNavigate } from 'react-router-dom';
 import { motion } from 'framer-motion';
 import { postData } from '../methods/methods';
 import NavbarLight from '../navbar/NavbarStudentLight';
-
 
 function Login() {
   const form = useRef(null);
@@ -15,16 +14,13 @@ function Login() {
 
   useEffect(() => {
     if(success)
-    setTimeout(() => {
-      navigate('/complaint')
-    }, 2000);
-  }, [success])
+      navigate('/admin')
+  }, [success]);
 
   function handleSubmit(e) {
     e.preventDefault();
     var formdata = new FormData(form.current);
-    postData("students/login", formdata).then(data => {
-      console.log(data)
+    postData("admin/login", formdata).then(data => {
       if (typeof data !== "undefined" && data["success"]) {
         setSuccess(true);
         setError("");
@@ -36,7 +32,7 @@ function Login() {
   }
   return (
     <>
-      <NavbarLight />
+    <NavbarLight/>
       <div className="justify-content-center container">
         <div className="container justify-content-center logcontainer row  mt-4">
           <div className="container-sm icondiv col-6">
@@ -45,13 +41,13 @@ function Login() {
           <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} className="container-sm  contentdiv col-6">
             <ul className="nav nav-tabs">
               <li className="nav-item">
-                <Link className="nav-link active" aria-current="page" to="/">Student</Link>
+                <Link className="nav-link" aria-current="page" to="/login">Student</Link>
               </li>
               <li className="nav-item">
-                <Link className="nav-link" to="/admin/login">Admin</Link>
+                <Link className="nav-link active" to="/admin/login">Admin</Link>
               </li>
             </ul>
-            <h1>Login</h1>
+            <h1>Admin Login</h1>
 
             {success ? <div className='alert alert-success '>Login Successful!</div> : ""}
             {error.length > 0 ? <div className='alert alert-danger'>{error}</div> : ""}

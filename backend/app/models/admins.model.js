@@ -11,6 +11,9 @@ module.exports = (sequelize, Sequelize) => {
       },
       level: {
         type: Sequelize.STRING
+      },
+      solved: {
+        type: Sequelize.INTEGER
       }
     });
     return Admins;

@@ -1,11 +1,25 @@
 import React, { useEffect, useRef, useState } from 'react'
+import { useNavigate } from 'react-router-dom';
 import { postData, getData } from '../methods/methods';
+import TableOptions from './TableOptions';
 import './Table.css'
 import Tablerow from './Tablerow'
 function Table() {
+
   const form = useRef(null);
   const [incomingData, changeData] = useState([]);
-  const [add_data] = useState({})
+  const [admin_level,setLevel] = useState(1);
+  const [solved, setSolved] = useState(0);
+  const navigate = useNavigate();
+  var new_data = {
+    filters: {
+
+    },
+    sort: {
+      name: "roll_number",
+      order: ""
+    }
+  };
   const [data] = useState({
     filters: {
 
@@ -21,24 +35,25 @@ function Table() {
   //   add_data["name"] = name;
   //   add_data["val"] = val;
   // }
-  useEffect(()=>{
-    getData("complaints").then(data => {
-      if (typeof data !== "undefined")
-        changeData(data);
+  useEffect(() => {
+    getData("admin").then(data => {
+      if(data["login"]){
+        setLevel(parseInt(data["ADMIN_LEVEL"]))
+        setSolved(parseInt(data["solved"]))
+      }
     })
-  },[])
-  
+    getData("admin/complaints").then(data => {
+      if (data.hasOwnProperty("login")) {
+        navigate('/admin/login')
+      } else {
+        changeData(data);
+      }
+    })
+  }, [])
+
   function handleFiltersSubmit() {
     var formdata = new FormData(form.current);
-    var new_data = {
-      filters: {
 
-      },
-      sort: {
-        name: "roll_number",
-        order: ""
-      }
-    };
 
     for (const [key, val] of formdata) {
       if (key == "sortBy") {
@@ -57,12 +72,47 @@ function Table() {
     // new_data.filters[add_data["nasme"]] = add_data["val"];
     console.log(new_data)
     postData("admin/complaints", formdata).then(data => {
+      
       if (typeof data !== "undefined")
         changeData(data);
     })
   }
+  function handleAccept(cid) {
+    postData("admin/complaints/modify", {
+      complaint_id: cid,
+      complaint_status: "ACCEPT"
+    }).then(data => {
+      if (typeof data !== "undefined")
+        if (data["success"]) {
+          alert(cid + " : " + "ACCEPT")
+        }
+    })
+  }
+  function handleEscalate(cid) {
+    postData("admin/complaints/modify", {
+      complaint_id: cid,
+      complaint_status: "ESCALATE"
+    }).then(data => {
+      if (typeof data !== "undefined")
+        if (data["success"]) {
+          alert(cid + " : " + "ESCALATE")
+        }
+    })
+  }
+  function handleReject(cid) {
+    postData("admin/complaints/modify", {
+      complaint_id: cid,
+      complaint_status: "REJECT"
+    }).then(data => {
+      if (typeof data !== "undefined")
+        if (data["success"]) {
+          alert(cid + " : " + "REJECT")
+        }
+    })
+  }
   return (
     <>
+      <TableOptions total={incomingData.length} pending={solved} solved={incomingData.filter((val) => val.status != "").length} />
       <div className="container pt-4 table-responsive tables">
         <div className='option row frb table-responsive'>
           <form onChange={handleFiltersSubmit} ref={form}>
@@ -105,8 +155,26 @@ function Table() {
             </div>
           </form>
         </div>
-
-
+        <div className="modal fade" id="exampleModal" tabIndex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+          <div className="modal-dialog modal-dialog-centered modal-dialog-scrollable">
+            <div className="modal-content">
+              <div className="modal-header">
+                <h5 className="modal-title">Complaint:</h5>
+                <button type="button" className="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+              </div>
+              <div className="modal-body">
+                Complaint: <p id='modal-content'></p>
+                Complaint ID: <b><p id='complaint-id'></p></b> 
+              </div>
+              <div className="modal-footer">
+                <button type="button" className="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                <button type="button" className="btn btn-success" onClick={evt => handleAccept(evt.target.parentElement.parentElement.querySelector("#complaint-id").textContent)}>ACCEPT</button>
+                <button type="button" className="btn btn-danger" onClick={evt => handleReject(evt.target.parentElement.parentElement.querySelector("#complaint-id").textContent)}>REJECT</button>
+                {admin_level == 3 ? "" : <button type="button" className="btn btn-primary" onClick={evt => handleEscalate(evt.target.parentElement.parentElement.querySelector("#complaint-id").textContent)}>ESCALATE</button> }
+              </div>
+            </div>
+          </div>
+        </div>
 
         <table className="table main-table table-striped table-hover">
           <thead>
@@ -120,8 +188,8 @@ function Table() {
             </tr>
           </thead>
           <tbody>
-            {incomingData.map((json,i) => {
-              return <Tablerow key={i} date={json.createdAt} cid={json._id} name={json.name} rollno={json.roll_number} top={json.issue_type} />
+            {incomingData.map((json, i) => {
+              return <Tablerow key={i} date={json.createdAt} cid={json.id} name={json.name} rollno={json.roll_number} top={json.issue_type} problem={json.problem} />
             })}
           </tbody>
         </table>

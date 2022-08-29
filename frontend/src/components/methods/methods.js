@@ -4,28 +4,36 @@ async function postData(url, formdata) {
     if (typeof formdata["filters"] !== "undefined") {
         data = formdata;
     }
+    else if (typeof formdata["complaint_id"] !== "undefined") {
+        data = formdata;
+    }
     else {
         for (const [name, value] of formdata) {
             data[name] = value;
         }
     }
 
-    await fetch(API_URL + url, {
+    return await fetch(API_URL + url, {
         method: 'POST',
         body: JSON.stringify(data),
         headers: {
-            "Content-Type": "application/json"
-        }
+            'Accept': 'application/json',
+            'Content-Type': 'application/json'
+        },
+        credentials: 'include'
     }).then(data => data.json())
-        .then(data => {
-            return data;
-        })
 }
 
 async function getData(url) {
-    return fetch(API_URL + url, {
+    const data = await fetch(API_URL + url, {
         method: 'GET',
-    }).then(data => data.json())
+        headers: {
+            'Accept': 'application/json',
+            'Content-Type': 'application/json'
+        },
+        credentials: 'include'
+    });
+    return await data.json();
 
 }
 export {
