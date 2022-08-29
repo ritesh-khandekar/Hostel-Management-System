@@ -99,7 +99,7 @@ exports.filtered = (req, res) => {
 	if (!ADMIN_LEVEL) {
 		ADMIN_LEVEL = 1;
 	}
-	const valid_keys = ["complaint_id", "roll_number", "hostel_number", "room_number", "issue_type", "name", "status", "level"];
+	const valid_keys = ["complaint_id", "roll_number", "hostel_number", "room_number", "issue_type", "name", "status", "level", "createdAt"];
 	const data = req.body;
 
 	var condition = "";
@@ -107,6 +107,9 @@ exports.filtered = (req, res) => {
 	
 	for (key in data.filters) {
 		if (valid_keys.includes(key)) {
+			if(data[key]=="" || data[key]==null){
+				continue;
+			}
 			condition[key] = { [Op.iLike]: `%${data[key]}%` }
 		}
 	}

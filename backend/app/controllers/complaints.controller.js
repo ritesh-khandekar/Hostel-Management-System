@@ -65,8 +65,18 @@ exports.create = (req, res) => {
 								err.message || "Some error occurred while creating the complaint."
 						});
 					});
+			}).catch(err => {
+				res.status(500).send({
+					message:
+						err.message || "Some error occurred while creating complaints."
+				});
 			})
 		}
+	}).catch(err => {
+		res.status(500).send({
+			message:
+				err.message || "Some error occurred while creating complaint."
+		});
 	})
 
 

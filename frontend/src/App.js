@@ -1,20 +1,20 @@
 import "./App.css";
 import React from 'react';
+import Login from "./components/login/Login";
 
-import Table from "./components/Table";
-import TableOptions from "./components/TableOptions";
-import logo from './components/crce-logo.svg'
 // import ComplaintForm from "./components/Complaintform";
+
+// import { Route, Routes } from "react-router-dom";
+// import Admin from "./components/admin/Admin";
+// import Student from "./components/students/Student";
+// import Table from "./components/admin/Table";
+// import TableOptions from "./components/admin/TableOptions";
+
 
 function App() {
   return (
     <>
-    <div className="icon">
-  <img id="clg-logo" src={logo} alt="" />
-</div>
-    <TableOptions total="4" pending="2" solved="2"/>
-
- <Table/>
+    <Login/>
     </>
   );
 }

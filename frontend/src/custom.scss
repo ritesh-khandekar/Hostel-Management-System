@@ -1,0 +1,5 @@
+$primary: #6355a3;
+$secondary: #00d4ff;
+$gradient: linear-gradient(to bottom right, $primary,$secondary);
+
+@import '~bootstrap/scss/bootstrap.scss';

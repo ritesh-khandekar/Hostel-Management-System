@@ -1,7 +1,7 @@
 import React, { useState } from 'react'
 
-function TextArea() {
-  const [text, settext] = useState('')
+function TextArea(props) {
+  const [text, settext] = useState('');
   const handlechange = (event) => {
     settext(event.target.value)
     var s = document.getElementById('Textarea').value;
@@ -18,7 +18,7 @@ function TextArea() {
     <>
       <div className="col-md-12">
         <label htmlFor="inputState" className="form-label">Describe your problem in 150 words</label>
-        <textarea className="form-control" name='problem' value={text} onChange={handlechange} id="Textarea"></textarea>
+        <textarea className="form-control" name='problem' value={text} onChange={handlechange} id="Textarea" defaultValue={props.user_state.problem}></textarea>
 
         <p>{text.split(" ").length}/150 words</p>
 
