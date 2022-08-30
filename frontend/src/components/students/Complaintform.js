@@ -39,6 +39,7 @@ function ComplaintForm() {
         if (json["success"]) {
           setSuccess(true);
           setError(null);
+          form.current.reset();
         } else {
           setError(json["message"]);
           setSuccess(false);

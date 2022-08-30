@@ -1,6 +1,7 @@
 const db = require("../models");
 const { checkAdminLogin } = require("../methods/methods");
 const session = require("express-session");
+const moment = require("moment")
 const Admins = db.admins;
 const Complaints = db.complaint;
 const Op = db.Sequelize.Op;
@@ -38,7 +39,7 @@ exports.status = (req, res) => {
 			}).catch(err => {
 				res.status(500).send(err);
 			})
-		}else if (data.level == "2") {
+		} else if (data.level == "2") {
 			Complaints.count({
 				where: {
 					[Op.not]: { "status": null },
@@ -56,8 +57,8 @@ exports.status = (req, res) => {
 		} else {
 			Complaints.count({
 				where: {
-					[Op.not]: [{"status": null}],
-					"level":"3"
+					[Op.not]: [{ "status": null }],
+					"level": "3"
 				}
 			}).then(data => {
 				res_json["solved"] = data.toString();
@@ -72,18 +73,18 @@ exports.status = (req, res) => {
 	})
 
 }
-exports.create = (req, res) => {
-	Admins.create({
-		email: req.body.email,
-		password: req.body.password,
-		level: req.body.level,
-		name: req.body.name
-	}).then(data => {
-		res.status(201).send(data)
-	}).catch(err => {
-		res.status(500).send(err)
-	})
-}
+// exports.create = (req, res) => {
+// 	Admins.create({
+// 		email: req.body.email,
+// 		password: req.body.password,
+// 		level: req.body.level,
+// 		name: req.body.name
+// 	}).then(data => {
+// 		res.status(201).send(data)
+// 	}).catch(err => {
+// 		res.status(500).send(err)
+// 	})
+// }
 // exports.adminStatus = (req, res) => {
 // 	if (!req.body.email || !req.body.password) {
 // 		res.status(400).send({
@@ -144,15 +145,43 @@ exports.complaints = (req, res) => {
 	if (!ADMIN_LEVEL) {
 		ADMIN_LEVEL = "1";
 	}
-
+	if (ADMIN_LEVEL < 3) {
+		var NEW_LEVEL = (parseInt(ADMIN_LEVEL) + 1).toString();
+		Admins.findOne({
+			where: {
+				level: NEW_LEVEL
+			}
+		}).then(data => {
+			Complaints.update({
+				"level": NEW_LEVEL,
+				"handler_name": data.name,
+				"status": ""
+			}, {
+				where: {
+					createdAt: {
+						[Op.lte]: moment().subtract(7, 'days').toDate()
+					}
+				}
+			}).then(data => {
+			}).catch(err => {
+				res.status(500).send({
+					message: err
+				})
+			})
+		}).catch(err => {
+			res.status(500).send({
+				message: err
+			})
+		})
+	}
 	Complaints.findAll({
 		limit: 30,
 		where: {
 			level: ADMIN_LEVEL,
 			// status: null,
 		},
-		order:[
-			["status","ASC"],
+		order: [
+			["status", "ASC"],
 		]
 	})
 		.then(data => {

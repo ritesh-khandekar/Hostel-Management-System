@@ -33,7 +33,7 @@ function ChangePwd() {
                 <Link className='' to={'/'}><img className='ps-lg-3' src={icon} height="60" /></Link>
             </div>
             <div className="items-right">
-                <Link className='btn btn-outline-primary px-lg-4 mx-1 mx-lg-2 rounded-5' to={'/'}><FontAwesomeIcon icon={faHome} /> Home</Link>
+                <Link className='btn btn-primary px-lg-4 mx-1 mx-lg-2 rounded-5' to={'/'}><FontAwesomeIcon icon={faHome} /> Home</Link>
                 <Link className='btn btn-outline-primary active mx-1 mx-lg-2 px-lg-4 rounded-5' to={'/dashboard/student'}>Dashboard</Link>
                 <Link className='btn btn-outline-danger mx-1 mx-lg-2 px-lg-4 rounded-5' to={'/logout'}>Logout<FontAwesomeIcon className='ps-2' icon={faSignOut} /></Link>
             </div>

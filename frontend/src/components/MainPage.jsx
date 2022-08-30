@@ -1,8 +1,9 @@
 import './mainstyle.css'
 import icon from './images/icon.png'
+import leftimg from "./images/left_img.jpg"
 import { Link } from 'react-router-dom'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faAnglesRight, faCoffee} from '@fortawesome/free-solid-svg-icons';
+import { faAnglesRight, faCoffee } from '@fortawesome/free-solid-svg-icons';
 
 
 // import bg from "./images/bg_img.webp"
@@ -23,7 +24,7 @@ function MainPage() {
                 <p className="text-info_main">
                     We have created an awesome app to takle the problems related to hostels. Tighten your seat belt to go into a fascinating journy.
                 </p>
-                <Link className="btn_main display-3 btn-primary text-decoration-none shadow" to={"/login"}>Get Started <FontAwesomeIcon icon={ faAnglesRight } /></Link>
+                <Link className="btn_main display-3 btn-primary text-decoration-none shadow" to={"/login"}>Get Started <FontAwesomeIcon icon={faAnglesRight} /></Link>
             </div>
         </div>
     </>

@@ -4,8 +4,8 @@ body{
     padding: 0;
     margin: 0;
     font-family: sans-serif;
-    /* background: url(./images/gradient_bg.png); */
-    background: radial-gradient(circle at 78% 65%,#00a6ffbb 1%, #fff 60%);
+    background: url(./images/gradient_bg.png);
+    /* background: radial-gradient(circle at 78% 65%,#00a6ffbb 1%, #fff 60%); */
     background-repeat: no-repeat;
     background-size: cover;
     color: #183759;

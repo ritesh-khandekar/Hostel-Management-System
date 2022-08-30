@@ -128,19 +128,17 @@ function Table() {
   return (
     <>
       <TableOptions total={incomingData.length} pending={incomingData.filter((val) => val.status == null).length} solved={isNaN(solved) ? 0 : solved}/>
-      <div className="modal fade" id="exampleModal" tabIndex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+      <div className="modal fade hide" id="exampleModal" tabIndex="-1" aria-labelledby="exampleModalLabel" data-keyboard="false" data-backdrop="static" aria-hidden="true">
           <div className="modal-dialog modal-dialog-centered modal-dialog-scrollable">
             <div className="modal-content">
               <div className="modal-header">
                 <h5 className="modal-title">Complaint:</h5>
-                <button type="button" className="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
               </div>
               <div className="modal-body">
                 Complaint: <p id='modal-content'></p>
                 Complaint ID: <b><p id='complaint-id'></p></b>
               </div>
               <div className="modal-footer">
-                <button type="button" className="btn btn-secondary" data-bs-dismiss="modal">Close</button>
                 <button type="button" className="btn btn-success" onClick={evt => handleAccept(evt.target.parentElement.parentElement.querySelector("#complaint-id").textContent,evt)}>ACCEPT</button>
                 <button type="button" className="btn btn-danger" onClick={evt => handleReject(evt.target.parentElement.parentElement.querySelector("#complaint-id").textContent,evt)}>REJECT</button>
                 {admin_level == 3 ? "" : <button type="button" className="btn btn-primary" onClick={evt => handleEscalate(evt.target.parentElement.parentElement.querySelector("#complaint-id").textContent,evt)}>ESCALATE</button>}

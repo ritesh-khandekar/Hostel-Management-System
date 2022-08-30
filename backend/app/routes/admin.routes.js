@@ -9,7 +9,7 @@ module.exports = app => {
     router.post("/complaints/modify", admin.getAction);
 
     router.post("/login", admin.login);
-    router.post("/create",admin.create);
+    // router.post("/create",admin.create);
 
     // router.get("/status",admin.adminStatus);
 
