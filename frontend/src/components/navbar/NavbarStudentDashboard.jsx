@@ -5,9 +5,9 @@ import { getData } from "../methods/methods";
 
 const navData = [
     {"data":"Submit a complaint", "link":"/complaint"},
-    {"data":"Login", "link":"/login"},
+    {"data":"Track Complaints", "link":"/track"},
     {"data":"Admin", "link":"/admin/login"},
-    // {"data":"Logout", "link":"/logout"},
+    {"data":"Logout", "link":"/logout"},
 ]
 
 function NavLinks(props) {

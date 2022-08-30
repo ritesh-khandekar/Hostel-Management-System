@@ -83,7 +83,18 @@ exports.create = (req, res) => {
 };
 
 exports.findAll = (req, res) => {
-	Complaints.findAll()
+	if(!checkLogin(req)){
+		res.status(500).send({
+			login: false
+		})
+	}
+	Complaints.findAll({
+		where:
+		{
+			roll_number: req.session.roll_number,
+			name: req.session.name
+		}
+	})
 		.then(data => {
 			res.send(data);
 		})

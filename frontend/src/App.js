@@ -7,6 +7,9 @@ import Admin from "./components/admin/Admin";
 import Student from "./components/students/Student";
 import ComplaintForm from "./components/students/Complaintform";
 import Logout from "./components/login/Logout";
+import TrackComplaint from "./components/students/TrackComplaint";
+import MainPage from "./components/MainPage";
+import ChangePwd from "./components/students/ChangePwd";
 
 // import ComplaintForm from "./components/Complaintform";
 
@@ -21,12 +24,19 @@ function App() {
   return (
     <>
       <Routes>
-        <Route path='/admin' element={<Admin />} />
-        <Route path='/' element={<Student />} />
-        <Route path='/login' element={<Login />} />
-        <Route path='/admin/login' element={<AdminLogin />} />
-        <Route path='/complaint' element={<ComplaintForm />} />
+      <Route index element={<MainPage/>} />
+      <Route path='/login' element={<Login />} />
+      <Route path='/admin/login' element={<AdminLogin />} />
+
+        <Route path='/dashboard/admin' element={<Admin />} />
+        <Route path='/dashboard/student' element={<Student />} />
+
+        <Route path='/student/track' element={<TrackComplaint />} />
+        <Route path='/student/complaint' element={<ComplaintForm />} />
+        <Route path='/student/changepwd' element={<ChangePwd />} />
+
         <Route path='/logout' element={<Logout />} />
+
       </Routes>
     </>
   );

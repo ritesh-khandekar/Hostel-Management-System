@@ -1,0 +1,61 @@
+@import url('https://fonts.googleapis.com/css2?family=Open+Sans:wght@800&display=swap');
+
+body{
+    padding: 0;
+    margin: 0;
+    font-family: sans-serif;
+    /* background: url(./images/gradient_bg.png); */
+    background: radial-gradient(circle at 78% 65%,#00a6ffbb 1%, #fff 60%);
+    background-repeat: no-repeat;
+    background-size: cover;
+    color: #183759;
+}
+.container_main{
+    /* background-color: #38ACEC; */
+    /* background-color: #64baea; */
+    display: flex;
+    align-items: flex-end;
+    justify-content: center;
+    flex-direction: column;
+    height: 90vh;
+}
+.block_main h1{
+    margin: 0;
+    font-size: 3em;
+    font-weight: bolder;
+    font-family: 'Open Sans', sans-serif;
+}
+.login-text{
+    font-size: 2.3em !important;
+}
+.block_main{
+    width: 360px;
+    text-align: center;
+    margin-right: 10%;
+}
+.block_main p{
+    padding: 15px 0;
+    padding-bottom: 5vh;
+}
+.block_main .btn_main{
+    font-family: 'Open Sans',sans-serif;
+    margin: 20px 0;
+    padding: 3vh 5vw;
+    border: none;
+    font-size: large;
+    background: #183759;
+    color: white;
+    border-radius: 10px;
+}
+
+@media only screen and (max-width: 600px) {
+    .container_main{
+        display: flex;
+        align-items: center;
+        justify-content: center;
+    }
+    .block_main {
+      justify-self: center;
+      margin: 0 !important;
+    }
+  }

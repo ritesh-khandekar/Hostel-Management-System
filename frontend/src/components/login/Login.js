@@ -1,10 +1,11 @@
 import React, { useEffect, useRef, useState } from 'react'
-import './Login.css'
-import hostel from './hostel.png';
+// import './Login.css'
+import icon from '../images/icon.png'
 import { Link, useNavigate } from 'react-router-dom';
 import { motion } from 'framer-motion';
 import { postData } from '../methods/methods';
-import NavbarLight from '../navbar/NavbarStudentLight';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { faAngleRight } from '@fortawesome/free-solid-svg-icons';
 
 
 function Login() {
@@ -14,10 +15,10 @@ function Login() {
   const [error, setError] = useState(false);
 
   useEffect(() => {
-    if(success)
-    setTimeout(() => {
-      navigate('/complaint')
-    }, 2000);
+    if (success)
+      setTimeout(() => {
+        navigate('/dashboard/student')
+      }, 2000);
   }, [success])
 
   function handleSubmit(e) {
@@ -36,48 +37,41 @@ function Login() {
   }
   return (
     <>
-      <NavbarLight />
-      <div className="justify-content-center container">
-        <div className="container justify-content-center logcontainer row  mt-4">
-          <div className="container-sm icondiv col-6">
-            <img src={hostel} alt="" id="hostelicon" />
-          </div>
-          <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} className="container-sm  contentdiv col-6">
+      <div className="navbar py-3 px-lg-3 mx-4">
+        <div className="items-left">
+          <Link className='' to={'/'}><img className='' src={icon} height="60" /></Link>
+        </div>
+        <div className="items-right">
+          <Link className='btn btn-outline-primary px-lg-4 mx-1 mx-lg-2 rounded-5' to={'/'}>Home</Link>
+          <Link className='btn btn-outline-primary active px-lg-4 mx-1 mx-lg-2 rounded-5' to={'/login'}>Login</Link>
+        </div>
+      </div>
+      <div className="container_main">
+        <div className="block_main bg-white p-4 rounded-4 shadow-lg">
+          <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} className="container-sm">
             <ul className="nav nav-tabs">
               <li className="nav-item">
-                <Link className="nav-link active" aria-current="page" to="/">Student</Link>
+                <Link className="nav-link active" aria-current="page" to="/login">Student</Link>
               </li>
               <li className="nav-item">
                 <Link className="nav-link" to="/admin/login">Admin</Link>
               </li>
             </ul>
-            <h1>Login</h1>
+
+            <h1 className='py-4 login-text'>Student Login</h1>
 
             {success ? <div className='alert alert-success '>Login Successful!</div> : ""}
             {error.length > 0 ? <div className='alert alert-danger'>{error}</div> : ""}
 
             <form ref={form} onSubmit={handleSubmit}>
-              <div className="mb-3">
-                <label htmlFor="exampleInputEmail1" className="form-label">Email address</label>
-                <input type="email" name='email' className="form-control" id="exampleInputEmail1" aria-describedby="emailHelp" />
+              <div className="form-group my-3">
+                <input type="email" name='email' placeholder='Enter your Email' className="form-control p-2" id="exampleInputEmail1" aria-describedby="emailHelp" />
               </div>
-              <div className="mb-3">
-                <label htmlFor="exampleInputPassword1" className="form-label">Password</label>
-                <input type="password" name='password' className="form-control" id="exampleInputPassword1" />
+              <div className="form-group my-4">
+                <input type="password" name='password' className="form-control p-2" placeholder='Enter your Password' id="exampleInputPassword1" />
               </div>
-              <div id="emailHelp" className="form-text"><Link to="/">Forgot Password? Contact Admin</Link></div>
-              <div className="role">
-                {/* <div className="form-check form-check-inline">
-                      <input className="form-check-input" type="radio" name="inlineRadioOptions" id="inlineRadio1" value="option1" />
-                      <label className="form-check-label" for="inlineRadio1">Student</label>
-                    </div>
-                    <div className="form-check form-check-inline">
-                      <input className="form-check-input" type="radio" name="inlineRadioOptions" id="inlineRadio2" value="option2" />
-                      <label className="form-check-label" for="inlineRadio2">Admin</label>
-                    </div> */}
-              </div>
-              <br />
-              <button type="submit" className="btn btn-primary">Login</button>
+              <div id="emailHelp" className="form-text"><Link className='text-decoration-none' to="/">Forgot Password? Contact Admin</Link></div>
+              <button type="submit" className="btn btn-primary py-2 px-5 shadow btn_main">Login <FontAwesomeIcon icon={ faAngleRight} /> </button>
             </form>
           </motion.div>
         </div>

@@ -1,22 +1,21 @@
 import React from 'react'
-import './Table.css'
-import logo from './crce-logo.svg'
+
 function TableOptions(props) {
   return (
     <>
-      <div className="container tab-opt">
-        <div className="statsblock row">
-          <div className="stblock col-4">
-            <h3>TOTAL COMPLAINTS</h3>
-            <h1 id='tno'>{props.total}</h1>
+      <div className="container">
+        <div className="row p-3 justify-content-around">
+          <div className="col-3 shadow-sm rounded-3">
+            <h5>TOTAL COMPLAINTS</h5>
+            <h1 id='tno' className='text-warning'>{props.total}</h1>
           </div>
-          <div className="stblock col-4 ">
-            <h3>SOLVED COMPLAINTS</h3>
-            <h1 id='pno'>{props.pending}</h1>
+          <div className="col-3 shadow-sm rounded-3 ">
+            <h5>SOLVED COMPLAINTS</h5>
+            <h1 id='pno' className='text-success'>{props.solved}</h1>
           </div>
-          <div className="stblock col-4">
-            <h3>PENDING COMPLAINTS</h3>
-            <h1 id='sno'>{props.solved}</h1>
+          <div className="col-3 shadow-sm rounded-3">
+            <h5>PENDING COMPLAINTS</h5>
+            <h1 id='sno' className='text-danger'>{props.pending}</h1>
           </div>
         </div>
       </div>

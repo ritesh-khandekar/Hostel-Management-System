@@ -51,7 +51,7 @@ app.get("/", (req, res) => {
 });
 app.get("/logout", (req, res) => {
   let session = req.session;
-  session.destroy();
+  req.session.destroy();
   res.status(401).send({
     login: false
   })

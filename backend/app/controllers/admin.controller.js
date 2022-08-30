@@ -10,7 +10,7 @@ var res_json = {
 }
 
 exports.status = (req, res) => {
-	for(key in req.session){
+	for (key in req.session) {
 		res_json[key] = req.session[key]
 	}
 	if (checkAdminLogin(req)) {
@@ -22,12 +22,55 @@ exports.status = (req, res) => {
 			level: res_json["ADMIN_LEVEL"]
 		}
 	}).then(data => {
-		res_json["solved"] = data.solved;
-		res.status(401).send(res_json);
+		if (data.level == "1") {
+			Complaints.count({
+				where: {
+					[Op.not]: { "status": null },
+
+					[Op.or]: [
+						{ "level": "2" },
+						{ "level": "3" }
+					]
+				}
+			}).then(data => {
+				res_json["solved"] = data.toString();
+				res.status(201).send(res_json);
+			}).catch(err => {
+				res.status(500).send(err);
+			})
+		}else if (data.level == "2") {
+			Complaints.count({
+				where: {
+					[Op.not]: { "status": null },
+
+					[Op.or]: [
+						{ "level": "3" }
+					]
+				}
+			}).then(data => {
+				res_json["solved"] = data.toString();
+				res.status(201).send(res_json);
+			}).catch(err => {
+				res.status(500).send(err);
+			})
+		} else {
+			Complaints.count({
+				where: {
+					[Op.not]: [{"status": null}],
+					"level":"3"
+				}
+			}).then(data => {
+				res_json["solved"] = data.toString();
+				res.status(201).send(res_json);
+			}).catch(err => {
+				res.status(500).send(err);
+			})
+		}
+
 	}).catch(err => {
 		res.status(500).send(err)
 	})
-	
+
 }
 exports.create = (req, res) => {
 	Admins.create({
@@ -103,17 +146,20 @@ exports.complaints = (req, res) => {
 	}
 
 	Complaints.findAll({
+		limit: 30,
 		where: {
 			level: ADMIN_LEVEL,
-			status: [""]
-		}
+			// status: null,
+		},
+		order:[
+			["status","ASC"],
+		]
 	})
 		.then(data => {
-			if(data)
-			{
+			if (data) {
 				res.status(201).send(data);
 			}
-			else{
+			else {
 				res.status(500).send({
 					message:
 						err.message || "Some error occurred while retrieving complaints."
@@ -133,7 +179,7 @@ exports.filtered = (req, res) => {
 	// 	filters: {
 
 	// 	},
-	// 	sort: {
+	// 	sorts: {
 	// 		name: "",
 	// 		order: ""
 	// 	}
@@ -163,30 +209,33 @@ exports.filtered = (req, res) => {
 			if (data.filters[key] == "" || data.filters[key] == null) {
 				continue;
 			}
-			condition[key] = { [Op.iLike]: `%${data.filters[key]}%` }
+			condition[key] = { [Op.like]: `%${data.filters[key]}%` }
 		}
 	}
-	console.log(condition)
-	if (!valid_keys.includes(data.sort.name)) {
-		data.sort.name = "roll_number";
+	// console.log(condition)
+	console.log(data)
+	if (!valid_keys.includes(data.sorts.name)) {
+		data.sorts.name = "roll_number";
 	}
-	if (!["ASC", "DESC"].includes(data.sort.order)) {
-		data.sort.order = "ASC";
+	if (!["ASC", "DESC"].includes(data.sorts.order)) {
+		data.sorts.order = "ASC";
 	}
 	//  = params ? { [key]: { [Op.iLike]: `%${params}%` } } : null;
 	Complaints.findAll({
+		limit: 30,
 		where: condition,
 		order: [
-			[data.sort.name, data.sort.order]
+			// ["status","ASC"],
+			[data.sorts.name, data.sorts.order]
 		]
 	})
 		.then(data => {
-			res.send(data);
+			res.status(201).send(data);
 		})
 		.catch(err => {
 			res.status(500).send({
 				message:
-					"Some error occurred while retrieving complaints."
+					err || "Some error occurred while retrieving complaints."
 			});
 		});
 };
@@ -219,8 +268,9 @@ exports.getAction = (req, res) => {
 			}
 		}).then(data => {
 			Complaints.update({
-				"level": NEW_LEVEL ,
-				"handler_name": data.name
+				"level": NEW_LEVEL,
+				"handler_name": data.name,
+				"status": ""
 			}, {
 				where: {
 					id: COMPLAINT_ID
@@ -245,27 +295,9 @@ exports.getAction = (req, res) => {
 				message: err
 			})
 		})
-		
+
 	} else {
-		Admins.findOne({
-			where: {
-				level: ADMIN_LEVEL
-			}
-		}).then(data => {
-			Admins.update({
-				solved: data.solved + 1
-			},{
-				where: {
-					level: ADMIN_LEVEL
-				}
-			}).then(data => {
 
-			}).catch(err =>{
-
-			})
-		}).catch(err => {
-
-		});
 		Complaints.update({
 			"status": COMPLAINT_STATUS
 		}, {
