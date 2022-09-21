@@ -1,4 +1,6 @@
-# Hackathon-27-08-2022
+# Hostel Management System (Hackathon-27-08-2022 PS)
+This project is about hostel management. This project benefits both the hostel staff and the students. <br>
+Students can report concerns online in order to enhance the hostel environment and safety. When people send their complaints, Officers at the Hostel will manage them.
 
 ### Installation
 
